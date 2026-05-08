@@ -1,1 +1,0 @@
-export const MNEMONICS = "abandon able about above absent absorb abstract absurd abuse access aisle achieve aisle"
