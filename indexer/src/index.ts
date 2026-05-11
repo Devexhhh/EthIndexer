@@ -22,4 +22,17 @@ interface TransactionReceiptResponse {
     result: TransactionReceipt[];
 }
 
+function getTransactionReceipt(blockNumber: string): Promise<TransactionReceiptResponse> {
+    let data = JSON.stringify({
+        "id": 1,
+        "jsonrpc": "2.0",
+        "method": "eth_getBlockReceipts",
+        "params": [
+            "0x..."
+        ]
+    });
+
+    let config = {}
+}
+
 main();
