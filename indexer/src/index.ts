@@ -9,6 +9,9 @@ async function main() {
     // inspect the block from native eth transactions on one of these addresses
     const block = await provider.getBlock(CURRENT_BLOCK_NUMBER, true);
     console.log(block?.transactions)
+
+    const transaction = await getTransactionReceipt(CURRENT_BLOCK_NUMBER.toString());
+    const interestedTransaction = transaction?.result.filter(x => interestedAddress.includes(x.to));
     // Bad approach => Update the balance in the database
 }
 
@@ -42,7 +45,7 @@ function getTransactionReceipt(blockNumber: string): Promise<TransactionReceiptR
             'Cookie': ''
         },
         data: data
-    }
+    };
 }
 
 main();
