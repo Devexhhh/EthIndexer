@@ -12,4 +12,14 @@ async function main() {
     // Bad approach => Update the balance in the database
 }
 
+interface TransactionReceipt {
+    transactionHash: string;
+    from: string;
+    to: string;
+}
+
+interface TransactionReceiptResponse {
+    result: TransactionReceipt[];
+}
+
 main();
