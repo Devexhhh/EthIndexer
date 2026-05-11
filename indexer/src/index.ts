@@ -32,7 +32,17 @@ function getTransactionReceipt(blockNumber: string): Promise<TransactionReceiptR
         ]
     });
 
-    let config = {}
+    let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: "",
+        headers: {
+            'accept': 'application/json',
+            'content-type': 'application/json',
+            'Cookie': ''
+        },
+        data: data
+    }
 }
 
 main();
