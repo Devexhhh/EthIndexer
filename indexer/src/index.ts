@@ -7,11 +7,22 @@ async function main() {
     // get interested addresses from the DB
     const interestedAddress = ["0x05557f7d084b12c0b303c03e6e4aed314696533b", "0x4666462aa29602bA4F0f576f8C2312D2818838E8", "0x4666462aa29602bA4F0f576f8C2312D2818838E8", "0x5CF00a901e91702Ad5E658C39a5A9F3A64fb4151"]
     // inspect the block from native eth transactions on one of these addresses
-    const block = await provider.getBlock(CURRENT_BLOCK_NUMBER, true);
-    console.log(block?.transactions)
+
+    // const block = await provider.getBlock(CURRENT_BLOCK_NUMBER, true);
+    // console.log(block?.transactions)
 
     const transaction = await getTransactionReceipt(CURRENT_BLOCK_NUMBER.toString());
-    const interestedTransaction = transaction?.result.filter(x => interestedAddress.includes(x.to));
+
+    const interestedTransactions = transaction?.result.filter(x => interestedAddress.includes(x.to));
+
+    const fullTxns = await Promise.all(interestedTransactions.map(async ({ transactionHash }) => {
+        const txn = await provider.getTransaction(transactionHash);
+        return txn;
+    }))
+
+    console.log(fullTxns);
+
+    // console.log(interestedTransaction);
     // Bad approach => Update the balance in the database
 }
 
@@ -25,7 +36,7 @@ interface TransactionReceiptResponse {
     result: TransactionReceipt[];
 }
 
-function getTransactionReceipt(blockNumber: string): Promise<TransactionReceiptResponse> {
+async function getTransactionReceipt(blockNumber: string): Promise<TransactionReceiptResponse> {
     let data = JSON.stringify({
         "id": 1,
         "jsonrpc": "2.0",
