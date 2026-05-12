@@ -6,7 +6,8 @@ const provider = new JsonRpcProvider("https://eth-mainnet.g.alchemy.com/v2/dhuFX
 
 async function main() {
     // get interested addresses from the DB
-    const interestedAddress = ["0x05557f7d084b12c0b303c03e6e4aed314696533b", "0x5c3593481cba011737e36ded62f1797c9f6afce1"]
+    const interestedAddress = ["0x05557f7d084b12c0b303c03e6e4aed314696533b", "0x5c3593481cba011737e36ded62f1797c9f6afce1", "0xAe38b2153413f1f8438340963F298E39e3b25E04",
+        "0xBef7B36845cA31045E86D0B46DBCac4e6752A9cE"]
     // inspect the block from native eth transactions on one of these addresses
 
     // const block = await provider.getBlock(CURRENT_BLOCK_NUMBER, true);
