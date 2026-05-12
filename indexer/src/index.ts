@@ -1,11 +1,12 @@
 import { JsonRpcProvider } from "ethers";
+import axios from "axios";
 let CURRENT_BLOCK_NUMBER = 24936355;
 
 const provider = new JsonRpcProvider("https://eth-mainnet.g.alchemy.com/v2/dhuFXA2gtsJsGgz7diJSo")
 
 async function main() {
     // get interested addresses from the DB
-    const interestedAddress = ["0x05557f7d084b12c0b303c03e6e4aed314696533b", "0x4666462aa29602bA4F0f576f8C2312D2818838E8", "0x4666462aa29602bA4F0f576f8C2312D2818838E8", "0x5CF00a901e91702Ad5E658C39a5A9F3A64fb4151"]
+    const interestedAddress = ["0x05557f7d084b12c0b303c03e6e4aed314696533b", "0x5c3593481cba011737e36ded62f1797c9f6afce1"]
     // inspect the block from native eth transactions on one of these addresses
 
     // const block = await provider.getBlock(CURRENT_BLOCK_NUMBER, true);
@@ -13,7 +14,11 @@ async function main() {
 
     const transaction = await getTransactionReceipt(CURRENT_BLOCK_NUMBER.toString());
 
-    const interestedTransactions = transaction?.result.filter(x => interestedAddress.includes(x.to));
+    const interestedTransactions = transaction.result.filter(
+        (x) =>
+            (x.to && interestedAddress.includes(x.to.toLowerCase())) ||
+            (x.from && interestedAddress.includes(x.from.toLowerCase()))
+    );
 
     const fullTxns = await Promise.all(interestedTransactions.map(async ({ transactionHash }) => {
         const txn = await provider.getTransaction(transactionHash);
@@ -22,7 +27,7 @@ async function main() {
 
     console.log(fullTxns);
 
-    // console.log(interestedTransaction);
+    // console.log(interestedTransactions);
     // Bad approach => Update the balance in the database
 }
 
@@ -42,21 +47,25 @@ async function getTransactionReceipt(blockNumber: string): Promise<TransactionRe
         "jsonrpc": "2.0",
         "method": "eth_getBlockReceipts",
         "params": [
-            "0x..."
+            "0x17C7FA3" // TODO: add block number here
         ]
     });
 
     let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: "",
+        url: 'https://eth-mainnet.g.alchemy.com/v2/dhuFXA2gtsJsGgz7diJSo',
         headers: {
             'accept': 'application/json',
             'content-type': 'application/json',
-            'Cookie': ''
+            'Cookie': '_cfuvid=Qn1QTPgL8vHUo0A_cayd0JmLEtgJy5VQKGI5IFuem44-1737735399258-0.0.1.1-604800000'
         },
         data: data
     };
+
+    const response = await axios.request(config)
+    return response.data;
 }
+
 
 main();
